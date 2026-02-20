@@ -1,24 +1,7 @@
-# Core Frameworks
-streamlit==1.31.0
-fastapi==0.109.0
-uvicorn==0.27.0
-
-# Generative AI & Agents
-langchain==0.1.0
-langchain-google-genai==0.0.5
-langchain-community==0.0.10
-langchain-core==0.1.10
-pydantic==2.5.3
-
-# LLM Providers (Ücretsiz kotalar için)
-google-generativeai==0.3.2
-groq==0.4.2
-
-# Document Processing
-python-multipart==0.0.6
-pypdf==4.0.0
-pillow==10.2.0
-
-# Environment & Utils
-python-dotenv==1.0.0
-httpx==0.26.0
+streamlit
+google-generativeai
+python-dotenv
+pydantic
+pandas
+pillow
+pypdf
