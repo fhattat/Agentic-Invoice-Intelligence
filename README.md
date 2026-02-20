@@ -18,12 +18,21 @@ An AI-powered intelligent invoice analysis system focused on high accuracy and *
 
 ## 🛠️ Tech Stack
 
-* **Language:** Python
-* **AI Framework:** LangChain / Google Generative AI SDK
-* **LLM Engine:** Google Gemini 1.5 Pro & Flash
-* **Data Validation:** Pydantic
-* **Frontend:** Streamlit
-* **Data Handling:** Pandas
+Language: Python
+
+AI Framework: LangChain / Google Generative AI SDK
+
+LLM Engine: Google Gemini 1.5 Pro & Flash (Multimodal)
+
+Data Validation: Pydantic (Structured Output Enforcement)
+
+Frontend: Streamlit
+
+Data Handling: Pandas
+
+Deployment: Streamlit Cloud (CI/CD via GitHub)
+
+Environment Management: Streamlit Secrets (for Secure API Key handling)
 
 ## 📦 Installation & Usage
 
