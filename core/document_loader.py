@@ -1,19 +1,17 @@
 import PIL.Image
-from pypdf import PdfReader
 import io
 
-def load_document(file):
+def load_document(uploaded_file):
     """
-    Yüklenen dosyayı (PDF veya Image) AI modelinin anlayacağı formata dönüştürür.
+    Converts the uploaded file into a format compatible with the Google Gemini API.
     """
-    if file.type == "application/pdf":
-        # PDF dosyasını metne çevir
-        reader = PdfReader(file)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text()
-        return text
+    if uploaded_file.type == "application/pdf":
+        # For PDF files, we send the raw bytes with the correct MIME type
+        return {
+            "mime_type": "application/pdf",
+            "data": uploaded_file.read()
+        }
     else:
-        # Görsel dosyası ise (JPG, PNG)
-        image = PIL.Image.open(file)
+        # For images, we open the image and return the PIL object or bytes
+        image = PIL.Image.open(uploaded_file)
         return image
