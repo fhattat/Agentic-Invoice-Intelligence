@@ -2,19 +2,14 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class InvoiceItem(BaseModel):
-    """Fatura içindeki her bir ürün veya hizmet kalemi"""
-    description: str = Field(description="Ürün veya hizmetin açıklaması")
-    quantity: float = Field(description="Miktar")
-    unit_price: float = Field(description="Birim fiyat")
-    total_price: float = Field(description="Kalemin toplam tutarı")
+    description: str = Field(description="Description of the product or service")
+    quantity: float = Field(description="Quantity of the item")
+    unit_price: float = Field(description="Price per unit")
+    total_price: float = Field(description="Total price for this line item")
 
 class InvoiceData(BaseModel):
-    """Faturadan çekilecek ana veri yapısı"""
-    sender_company: str = Field(description="Faturayı gönderen şirketin adı")
-    recipient_company: str = Field(description="Faturanın kesildiği (alıcı) şirketin adı")
-    invoice_date: str = Field(description="Fatura tarihi (GG/AA/YYYY formatında)")
-    invoice_number: str = Field(description="Fatura numarası")
-    items: List[InvoiceItem] = Field(description="Faturadaki ürünlerin listesi")
-    tax_amount: float = Field(description="Toplam KDV tutarı")
-    total_amount: float = Field(description="Her şey dahil genel toplam tutar")
-    currency: str = Field(description="Para birimi (TRY, USD, EUR vb.)")
+    sender_company: str = Field(description="The name of the company that issued the invoice")
+    invoice_date: str = Field(description="Date of the invoice")
+    total_amount: float = Field(description="The final total amount of the invoice")
+    currency: str = Field(description="Currency used in the invoice (e.g., USD, TRY, EUR)")
+    items: List[InvoiceItem] = Field(description="List of all products or services listed in the invoice")
