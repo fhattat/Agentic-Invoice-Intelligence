@@ -2,71 +2,72 @@ import streamlit as st
 from core.document_loader import load_document
 from core.agent import InvoiceAgent
 import PIL.Image
-import pandas as pd # Veri işleme için eklendi
+import pandas as pd
 
-# Sayfa Konfigürasyonu
+# Page Configuration
 st.set_page_config(page_title="Agentic Invoice Intelligence", page_icon="📄", layout="wide")
 
 st.title("📄 Agentic Invoice Intelligence")
-st.markdown("Yapay Zeka Destekli Akıllı Fatura Analiz Sistemi")
+st.markdown("AI-Powered Smart Invoice Analysis System")
 st.divider()
 
-# Yan Menü (Sidebar)
-st.sidebar.header("Ayarlar")
-uploaded_file = st.sidebar.file_uploader("Fatura Yükle (PDF veya Görsel)", type=["pdf", "jpg", "jpeg", "png"])
+# Sidebar Configuration
+st.sidebar.header("Settings")
+uploaded_file = st.sidebar.file_uploader("Upload Invoice (PDF or Image)", type=["pdf", "jpg", "jpeg", "png"])
 
-# Ana Ekran
+# Main Application Logic
 if uploaded_file is not None:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Fatura Önizleme")
+        st.subheader("Invoice Preview")
         if uploaded_file.type == "application/pdf":
-            st.info("PDF dosyası yüklendi. İçerik analiz ediliyor...")
+            st.info("PDF file uploaded. Analyzing content...")
         else:
             image = PIL.Image.open(uploaded_file)
-            st.image(image, caption="Yüklenen Fatura", use_column_width=True)
+            st.image(image, caption="Uploaded Invoice", use_column_width=True)
 
     with col2:
-        st.subheader("Yapay Zeka Analizi")
+        st.subheader("AI Analysis Results")
         
-        with st.spinner("Agent faturayı inceliyor ve verileri doğruluyor..."):
+        with st.spinner("Agent is analyzing the invoice and validating data..."):
             try:
-                # 1. Dokümanı yükle
+                # 1. Load document content
                 doc_content = load_document(uploaded_file)
                 
-                # 2. Agent'ı çalıştır
+                # 2. Initialize Agent and process the invoice
                 agent = InvoiceAgent()
                 result = agent.process_invoice(doc_content)
                 
-                # 3. Sonuçları Göster
-                st.success("Analiz Tamamlandı!")
+                # 3. Display Results
+                st.success("Analysis Completed Successfully!")
                 
-                # Özet Bilgiler
-                st.write(f"**Gönderen Firma:** {result.sender_company}")
-                st.write(f"**Fatura Tarihi:** {result.invoice_date}")
-                st.write(f"**Toplam Tutar:** {result.total_amount} {result.currency}")
+                # Summary Information
+                st.write(f"**Sender Company:** {result.sender_company}")
+                st.write(f"**Invoice Date:** {result.invoice_date}")
+                st.write(f"**Total Amount:** {result.total_amount} {result.currency}")
                 
-                # Hatalı olan st.table yerine güvenli pandas dataframe kullanımı
-                with st.expander("Fatura Kalemlerini Gör", expanded=True):
+                # Line Items Table
+                with st.expander("View Invoice Line Items", expanded=True):
                     if result.items:
-                        # Pydantic modellerinden oluşan listeyi DataFrame'e çeviriyoruz
+                        # Convert Pydantic models to a clean DataFrame
                         items_list = [item.dict() for item in result.items]
                         df = pd.DataFrame(items_list)
                         
-                        # Sütun isimlerini daha şık hale getirelim (isteğe bağlı)
-                        df.columns = ["Açıklama", "Miktar", "Birim Fiyat", "Toplam"]
+                        # Set professional English column names
+                        df.columns = ["Description", "Quantity", "Unit Price", "Total"]
                         
                         st.dataframe(df, use_container_width=True)
                     else:
-                        st.warning("Fatura kalemi bulunamadı.")
+                        st.warning("No line items found in this document.")
                 
-                with st.expander("Ham JSON Çıktısı"):
+                # Raw JSON Output for developer debugging
+                with st.expander("Raw JSON Output"):
                     st.json(result.dict())
 
             except Exception as e:
-                # Hata detayını terminalden de görmek için:
-                print(f"Hata Detayı: {e}")
-                st.error(f"Bir hata oluştu: {e}")
+                # Log detailed error to console and show user-friendly message
+                print(f"Error Details: {e}")
+                st.error(f"An error occurred during processing: {e}")
 else:
-    st.info("Lütfen analiz etmek için sol menüden bir fatura dosyası yükleyin.")
+    st.info("Please upload an invoice file from the sidebar to begin analysis.")
